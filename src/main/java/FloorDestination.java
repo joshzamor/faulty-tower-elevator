@@ -28,7 +28,7 @@ public class FloorDestination implements Comparable<FloorDestination> {
    * @param direction direction of call
    */
   public FloorDestination(int floor, Direction direction) {
-    this(floor, direction, 1);
+    this(floor, direction, 0);
   }
 
   /**
@@ -41,11 +41,54 @@ public class FloorDestination implements Comparable<FloorDestination> {
   }
 
   /**
-   * get Direction this floor call is for, or {@link Direction#REST} by default.
-   * @return direction the call is for.
+   * Determines if this FloorDestination has the given floor number.
+   * @param floorNumber floor number to test against.
+   * @return true if the floor number is the same, false otherwise.
    */
-  public Direction getDirection() {
-    return this.direction;
+  public boolean hasFloorNumber(int floorNumber) {
+    return this.floor == floorNumber;
+  }
+
+  /**
+   * Determines if the given Direction is the "same" as our direction,
+   * which is true when both Direction are equal, or either one is
+   * {@link Direction#REST}
+   * @param otherDirection the Direction to test against.
+   * @return true if both in same direction, false otherwise.
+   */
+  public boolean hasSameDirection(Direction otherDirection) {
+    if( !hasDirection() || otherDirection == Direction.REST ) return true;
+    return direction.equals(otherDirection);
+  }
+
+  /**
+   * If this FloorDestination has a Direction.
+   * @return true if not {@link Direction#REST}, false otherwise.
+   */
+  public boolean hasDirection() {
+    return Direction.REST != this.direction;
+  }
+
+  /**
+   * Determines if the given FloorDirection is above and in the same direction
+   * as this FloorDirection.  This Direction of this FloorDestination is
+   * not considered, only the floor number of this FloorDestination and the given one,
+   * as well as the Direction of the given FloorDestination, and the
+   * given parameter Direction.
+   *
+   * @param other The other FloorDestination
+   * @param travelDirection the given Direction of travel of this FloorDestination
+   * @return true if the given FloorDestination is reachable by this FloorDestination
+   * traveling in the given Direction.  False otherwise.
+   */
+  public boolean isAboveInDirection(FloorDestination other, Direction travelDirection) {
+    if( null == other || null == travelDirection ) return false;
+    if( this.floor == other.floor ) return true;
+    if( this.floor < other.floor ) {
+      return other.hasSameDirection(travelDirection);
+    }
+
+    return false;
   }
 
   /**
@@ -54,6 +97,16 @@ public class FloorDestination implements Comparable<FloorDestination> {
    */
   public boolean hasPriority() {
     return priority > 0;
+  }
+
+  /**
+   * The number of floors the given floor is away from our floor, as in
+   * a direction on a number line.
+   * @param other the other floor.
+   * @return > 0 for floors "above" us, < 0 for floors below us.  Or 0.
+   */
+  public int floorsAway(FloorDestination other) {
+    return other.floor - this.floor;
   }
 
   /**

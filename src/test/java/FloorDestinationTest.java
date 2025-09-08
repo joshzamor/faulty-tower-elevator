@@ -32,6 +32,16 @@ public class FloorDestinationTest {
   }
 
   @Test
+  void testIsOutsideFloorLimits() {
+    var inside = new FloorDestination(0);
+    var outside = new FloorDestination(2);
+    var floorLimits = new FloorLimits(0,1);
+
+    assertFalse(inside.isOutsideFloorLimit(floorLimits));
+    assertTrue(outside.isOutsideFloorLimit(floorLimits));
+  }
+
+  @Test
   void testUp() {
     for(int i = 0; i < floorDestSorted.size(); ++i) {
       var floor = floorDestSorted.pollFirst();

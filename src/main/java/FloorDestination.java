@@ -50,6 +50,15 @@ public class FloorDestination implements Comparable<FloorDestination> {
   }
 
   /**
+   * Determines if this FloorDestination is outside the given FloorLimits.
+   * @param floorLimits Lowest and highest floors, inclusive.
+   * @return true if outside limits, false otherwise.
+   */
+  public boolean isOutsideFloorLimit(FloorLimits floorLimits) {
+    return this.floor < floorLimits.min() || this.floor > floorLimits.max();
+  }
+
+  /**
    * Determines if the given Direction is the "same" as our direction,
    * which is true when both Direction are equal, or either one is
    * {@link Direction#REST}
@@ -147,5 +156,9 @@ public class FloorDestination implements Comparable<FloorDestination> {
         direction.toString(),
         priority,
         requestTime.toString());
+  }
+
+  public String floorAsString() {
+    return floor + "";
   }
 }

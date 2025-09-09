@@ -2,6 +2,27 @@
 
 An elevator that Faulty Towers would be proud of.
 
+## Requirements
+
+- Make (optional)
+- Docker
+  - Alternatively:  JDK 21+ and Maven 3.9+
+
+## Quick Start
+
+1. Build: `make`
+2. Run tests: `make test`
+
+Or without Make:
+
+1. Build: `docker build jz/faulty-tower-elevator:latest .`
+2. Run tests: `docker run jz/faulty-tower-elevator:latest`
+
+Or without Docker:
+
+1. Build: `mvn compile`
+2. Run tests: `mvn test`
+
 ## Design notes
 
 Consider:

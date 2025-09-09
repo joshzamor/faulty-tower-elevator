@@ -12,7 +12,7 @@ public class ElevatorTest {
 
   @BeforeEach
   void setup() {
-    elevator = new Elevator(new FloorLimits(Integer.MIN_VALUE, Integer.MAX_VALUE));
+    elevator = new Elevator(1, new FloorLimits(Integer.MIN_VALUE, Integer.MAX_VALUE));
     elevator.addRequest(new FloorDestination(1, Direction.UP));
     elevator.addRequest(new FloorDestination(3));
     elevator.addRequest(new FloorDestination(5, Direction.DOWN));
@@ -22,13 +22,13 @@ public class ElevatorTest {
 
   @Test
   void testAddRequestDenied() {
-    var smallElevator = new Elevator(new FloorLimits(0, 1));
+    var smallElevator = new Elevator(1, new FloorLimits(0, 1));
     assertFalse(smallElevator.addRequest(new FloorDestination(-1)));
   }
 
   @Test
   void testNextFloorEmpty() {
-    var emptyElev = new Elevator(new FloorLimits(0, 1));
+    var emptyElev = new Elevator(1, new FloorLimits(0, 1));
 
     assertTrue(emptyElev.nextFloor().isEmpty());
   }
@@ -67,4 +67,95 @@ public class ElevatorTest {
     }
   }
 
+  @Test
+  void testCalcBidCostAtRest() {
+    var floor = new FloorDestination(1);
+    var toFloor = new FloorDestination(10);
+
+    var lower = Elevator.calcBidCostRequest(
+        floor,
+        new ElevatorState(1, toFloor, Direction.REST, 0, 1, 10));
+    var higher = Elevator.calcBidCostRequest(
+        floor,
+        new ElevatorState(2, toFloor, Direction.UP, 0, 1, 10));
+
+
+    assertTrue(lower < higher);
+  }
+
+  @Test
+  void testCalcBidCostMoreWork() {
+    var floor = new FloorDestination(1);
+    var toFloor = new FloorDestination(10);
+
+    var lower = Elevator.calcBidCostRequest(
+        floor,
+        new ElevatorState(1, toFloor, Direction.UP, 0, 1, 10));
+    var higher = Elevator.calcBidCostRequest(
+        floor,
+        new ElevatorState(2, toFloor, Direction.UP, 0, 2, 10));
+
+    assertTrue(lower < higher);
+  }
+
+  @Test
+  void testCalcBidCostDirection() {
+    var floor = new FloorDestination(1);
+    var toFloorInDirection = new FloorDestination(10, Direction.UP);
+    var toFloorOtherDirection = new FloorDestination(-10, Direction.DOWN);
+
+    var lower = Elevator.calcBidCostRequest(
+        floor,
+        new ElevatorState(1, toFloorInDirection, Direction.UP, 0, 1, 10));
+    var higher = Elevator.calcBidCostRequest(
+        floor,
+        new ElevatorState(2, toFloorOtherDirection, Direction.UP, 0, 2, 10));
+
+    assertTrue(lower < higher);
+  }
+
+  @Test
+  void testCalcBidCostHasPriority() {
+    var floor = new FloorDestination(1);
+
+    var priorityCost = Elevator.calcBidCostRequest(
+        floor,
+        new ElevatorState(1, floor, Direction.UP, 1, 1, 1));
+    var regCost = Elevator.calcBidCostRequest(
+        floor,
+        new ElevatorState(2, floor, Direction.UP, 0, 10, 1));
+
+
+    assertTrue(priorityCost > regCost );
+  }
+
+  @Test
+  void testCalcBidCostPriorityFaceoff() {
+    var floor = new FloorDestination(1);
+
+    var morePriority = Elevator.calcBidCostRequest(
+        floor,
+        new ElevatorState(1, floor, Direction.UP, 2, 1, 1));
+    var lessPriority = Elevator.calcBidCostRequest(
+        floor,
+        new ElevatorState(2, floor, Direction.UP, 1, 10, 1));
+
+
+    assertTrue(morePriority > lessPriority );
+  }
+
+  @Test
+  void testCalcBidCostAtFloor() {
+    var floor = new FloorDestination(1);
+
+    var first = Elevator.calcBidCostRequest(
+        floor,
+        new ElevatorState(1, floor, Direction.UP, 0, 1, 1));
+    var second = Elevator.calcBidCostRequest(
+        floor,
+        new ElevatorState(2, floor, Direction.UP, 0, 10, 10));
+
+
+    assertTrue( 1 > Math.abs(first - second) );
+  }
 }

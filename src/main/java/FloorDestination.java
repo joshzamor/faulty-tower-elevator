@@ -1,6 +1,10 @@
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+/**
+ * Represents either a hall call (at floor in direction), or a button press
+ * (go to this floor inside elevator).
+ */
 public class FloorDestination implements Comparable<FloorDestination> {
 
   private final int floor;
@@ -47,6 +51,15 @@ public class FloorDestination implements Comparable<FloorDestination> {
    */
   public boolean hasFloorNumber(int floorNumber) {
     return this.floor == floorNumber;
+  }
+
+  /**
+   * Determines if this and other FloorDestination have the same floor number.
+   * @param other FloorDestination to test against.
+   * @return true if same floor numbers, false otherwise.
+   */
+  public boolean hasFloorNumber(FloorDestination other) {
+    return this.floor == other.floor;
   }
 
   /**

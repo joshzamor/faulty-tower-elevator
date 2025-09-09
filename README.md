@@ -1,6 +1,6 @@
 # Faulty Tower Elevator
 
-A toy elevator that Faulty Towers would be proud of.
+A toy elevator that Fawlty Towers would be proud of.
 
 ## Requirements
 
@@ -108,4 +108,4 @@ approaches is a good exercise.  Two main approaches were considered:
   likely more relevant: it might over-serve a request in a network
   partition, but it will serve it quicker.  Being more available
   is likely beneficial for a bank of elevators, especially those
-  run by frantic Mr. Basil in his Faulty Towers.
+  run by frantic Mr. Basil in his Fawlty Towers.
